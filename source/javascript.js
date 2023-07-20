@@ -21,7 +21,7 @@ tables.forEach(ele => {
             overGame(last, row, column)
             setInterval(() => {
                 btnOver.classList.add('show')
-            }, 5000)
+            }, 2500)
         }
         else if(vez >= velha) console.log('O jogo deu velha')
     })
@@ -84,5 +84,26 @@ function verDiag() {
 }
 
 function overGame(last, row, column) {
-    
+    const reta = document.querySelector('div.jogo > div')
+    reta.style.opacity = 1
+    if(last == "Lin") {
+        if(row == 1) reta.style.top = "15%"
+        else if(row == 2) reta.style.top = "50%"
+        else if(row == 3) reta.style.top = "83%"
+    } else if(last == "Col") {
+        reta.style.transform = 'rotate(90deg)'
+        reta.style.top = "50%"
+        if(column == 1) reta.style.left = "-33%"
+        else if(column == 2) reta.style.left = 0
+        else if(column == 3) reta.style.left = "33%"
+    } else {
+        reta.style.top = "50%"
+        reta.style.width = "120%"
+        if (last == "Diag") reta.style.transform = 'rotate(45deg)'
+        else if(last == "DiagInv") reta.style.transform = 'rotate(-45deg)'   
+    }
 }
+
+document.querySelector('.over > span').addEventListener( 'click', e => {
+    
+} )
