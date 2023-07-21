@@ -1,12 +1,50 @@
 const tables = document.querySelectorAll('div.jogo > span')
-let vez = Math.round(Math.random(0,1))
-const velha = vez + 9
-let over = 0
-let last = ''
+let vez 
+let velha 
+let over 
+let last 
+let winX = 0
+let winO = 0
+let XDOM = document.querySelector('#placar-x span#placar_')
+let ODOM = document.querySelector('#placar-o span#placar_')
+let SecDOM = document.querySelector('#placar-time span#sec')
+let MinDOM = document.querySelector('#placar-time span#min')
+let timeSec = 0
+let timeMin = 0
+
+setInterval( () => {
+    timeSec++
+    if(timeSec == 60) {
+        timeMin++
+        timeSec = 0
+    }
+    // console.log(timeMin, timeSec)
+    SecDOM.innerText = timeSec
+    MinDOM.innerText = `0${timeMin}`
+}, 1000 )
 // par -> X
 // impar -> O
 
-tables.forEach(ele => {
+function inicioGame() {
+    vez = random(0,1)
+    velha = vez + 9
+    over = 0
+    last = ''
+    
+    tables.forEach(e => {
+        e.innerText = ''
+    })
+
+    document.querySelector('.over span').innerText = 'The games over!'
+    
+}
+inicioGame()
+
+function random(min, max) {
+    return Math.round(Math.random(min, max))
+}
+
+tables.forEach((ele) => {
     ele.addEventListener('click', e => {
         const table = e.target
         const row = table.getAttribute('row')
@@ -17,13 +55,13 @@ tables.forEach(ele => {
         verDiag()
         const btnOver = document.querySelector('.over')
 
-        if(over) {
-            overGame(last, row, column)
-            setInterval(() => {
+        if(over || vez >= velha) {
+            overGame(last, row, column, vez)
+            if(vez >= velha && !last) document.querySelector('.over span').innerText = 'O jogo deu velha!'
+            setTimeout(() => {
                 btnOver.classList.add('show')
             }, 2500)
         }
-        else if(vez >= velha) console.log('O jogo deu velha')
     })
 })
 
@@ -83,27 +121,41 @@ function verDiag() {
     }
 }
 
-function overGame(last, row, column) {
-    const reta = document.querySelector('div.jogo > div')
-    reta.style.opacity = 1
-    if(last == "Lin") {
-        if(row == 1) reta.style.top = "15%"
-        else if(row == 2) reta.style.top = "50%"
-        else if(row == 3) reta.style.top = "83%"
-    } else if(last == "Col") {
-        reta.style.transform = 'rotate(90deg)'
-        reta.style.top = "50%"
-        if(column == 1) reta.style.left = "-33%"
-        else if(column == 2) reta.style.left = 0
-        else if(column == 3) reta.style.left = "33%"
-    } else {
-        reta.style.top = "50%"
-        reta.style.width = "120%"
-        if (last == "Diag") reta.style.transform = 'rotate(45deg)'
-        else if(last == "DiagInv") reta.style.transform = 'rotate(-45deg)'   
+function overGame(last, row, column, vez) {
+    if(last) {
+        const reta = document.querySelector('div.jogo > div')
+        reta.style.opacity = 1
+        reta.style.top = 'inherit'
+        reta.style.left = "inherit"
+        reta.style.width = "100%"
+        reta.style.transform = 'rotate(0)'
+        if(last == "Lin") {
+            if(row == 1) reta.style.top = "20%"
+            else if(row == 2) reta.style.top = "50%"
+            else if(row == 3) reta.style.top = "79%"
+        } else if(last == "Col") {
+            reta.style.transform = 'rotate(90deg)'
+            reta.style.top = "50%"
+            if(column == 1) reta.style.left = "-33%"
+            else if(column == 2) reta.style.left = 0
+            else if(column == 3) reta.style.left = "33%"
+        } else {
+            reta.style.top = "50%"
+            reta.style.width = "120%"
+            if (last == "Diag") reta.style.transform = 'rotate(45deg)'
+            else if(last == "DiagInv") reta.style.transform = 'rotate(-45deg)'   
+        }
+
+        if((vez-1)%2==0 && vez <= velha) winX++
+        else if(vez <= velha) winO++
+
+        XDOM.innerText = `00${winX}`
+        ODOM.innerText = `00${winO}`
     }
 }
 
 document.querySelector('.over > span').addEventListener( 'click', e => {
-    
+    inicioGame()
+    document.querySelector('div.jogo > div').style.opacity = 0
+    document.querySelector('.over').classList.remove('show')
 } )

@@ -21,7 +21,7 @@ main {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    padding: 100px 50px;
+    padding: 50px;
     gap: 100px;
 }
 
@@ -44,8 +44,23 @@ div.placar > ul {
 }
 
 div.placar > ul > li {
-    text-align: center;
-    line-height: 25px;
+    /* text-align: center;
+    line-height: 25px; */
+    font-size: 20px;
+}
+
+div.placar > ul > li > span#X,
+div.placar > ul > li > span#O {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+div.placar > ul > li > span#vez {
+    background-color: rgba(221, 47, 47, 0.7);
 }
 
 div.jogo {
